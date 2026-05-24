@@ -6,7 +6,11 @@ import type { AccountBrief, ProviderCall } from "@/lib/types"
 
 const SYSTEM_PROMPT = `You are a B2B sales research analyst. Given data about a company from multiple sources, synthesize it into a structured account brief.
 
-CRITICAL: The target company is identified by its DOMAIN (e.g. orthogonal.com). Multiple companies may share a similar name. Only use information that clearly relates to the company at the given domain. Discard any data about other companies with similar names — for example, news about "Orthogonal Asset Management" is irrelevant if the target domain is orthogonal.com (an API company). When in doubt, omit rather than include wrong data.
+CRITICAL RULES:
+1. The target company is identified by its DOMAIN. Only use information that clearly relates to the company at the given domain. Discard data about other companies with similar names.
+2. People in TESTIMONIALS, QUOTES, or REVIEWS on the website are CUSTOMERS, not employees. Never include them as key hires or contacts. Only include people who actually work at the target company.
+3. People shown in EXAMPLE code, DEMO data, or PLACEHOLDER content (e.g. "Jane Doe", "John Smith", sample API responses) are NOT real. Never include them.
+4. If you cannot confidently identify real employees of the target company, return fewer contacts rather than wrong ones.
 
 Return ONLY valid JSON matching this exact schema — no markdown, no commentary:
 
@@ -56,7 +60,7 @@ Guidelines:
 - For contacts: these should be the same people or a subset. Leave linkedInUrl and email as empty strings — they will be enriched by Apollo separately.
 - For buying triggers, consider the seller's ICP and product when provided.
 - For the outreach angle, reference specific signals that create a timely reason to reach out.
-- If data is sparse for a section, include what you can based on your knowledge. Never return an empty array for keyHires — at minimum include the known founders/CEO.
+- If you cannot identify real team members, return empty arrays for keyHires and contacts. Never use placeholder names like "Unknown", "John Doe", or "Jane Smith". Only include people you can name with confidence.
 - Dates should be ISO format. Use approximate dates if exact ones aren't available.`
 
 export async function POST(req: NextRequest) {
