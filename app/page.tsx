@@ -63,8 +63,8 @@ export default function HomePage() {
               Turn a company URL into a sales-ready account brief.
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
-              One input. One agent run. Apollo, People Data Labs, ScrapeGraph,
-              and Claude coordinated through Orthogonal in roughly 90 seconds.
+              One input. One agent run. Linkup, People Data Labs, ScrapeGraph,
+              and GPT-4o coordinated through Orthogonal in roughly 90 seconds.
             </p>
           </div>
 

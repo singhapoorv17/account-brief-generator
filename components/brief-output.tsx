@@ -284,7 +284,7 @@ function RecipePanel({
 }: {
   providerCalls: AccountBrief["providerCalls"];
 }) {
-  const totalCredits = providerCalls.reduce((sum, p) => sum + p.credits, 0);
+  const totalPrice = providerCalls.reduce((sum, p) => sum + p.price, 0);
   const totalLatency = providerCalls.reduce((sum, p) => sum + p.latencyMs, 0);
 
   return (
@@ -295,7 +295,7 @@ function RecipePanel({
           Inside the Orthogonal call
         </div>
         <p className="text-xs text-muted-foreground mt-1">
-          Every provider this agent ran, what it returned, and what it cost in credits.
+          Every provider this agent ran, what it returned, and what it cost.
         </p>
       </div>
       <div className="px-5 py-3">
@@ -312,7 +312,7 @@ function RecipePanel({
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <span>{call.latencyMs}ms</span>
-                <span className="text-primary/90">{call.credits} cr</span>
+                <span className="text-primary/90">${call.price.toFixed(2)}</span>
               </div>
             </div>
           ))}
@@ -321,7 +321,7 @@ function RecipePanel({
             <span className="text-foreground/70">Total</span>
             <div className="flex items-center gap-3">
               <span className="text-muted-foreground">{totalLatency}ms</span>
-              <span className="text-primary">{totalCredits} credits</span>
+              <span className="text-primary">${totalPrice.toFixed(2)}</span>
             </div>
           </div>
         </div>

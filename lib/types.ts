@@ -35,7 +35,7 @@ export interface ProviderCall {
   provider: string;
   purpose: string;
   status: "success" | "fallback" | "error";
-  credits: number;
+  price: number;
   latencyMs: number;
 }
 

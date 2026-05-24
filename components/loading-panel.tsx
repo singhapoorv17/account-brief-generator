@@ -8,7 +8,7 @@ const PROVIDERS: Omit<ProviderProgress, "status">[] = [
   { id: "linkup", label: "Linkup", purpose: "Searching recent news and funding" },
   { id: "pdl", label: "People Data Labs", purpose: "Pulling company profile and hires" },
   { id: "scrapegraph", label: "ScrapeGraph", purpose: "Reading website positioning" },
-  { id: "claude", label: "Claude (Sonnet)", purpose: "Synthesizing brief" },
+  { id: "gpt4o", label: "GPT-4o", purpose: "Synthesizing brief" },
 ];
 
 interface LoadingPanelProps {
