@@ -6,6 +6,8 @@ import type { AccountBrief, ProviderCall } from "@/lib/types"
 
 const SYSTEM_PROMPT = `You are a B2B sales research analyst. Given data about a company from multiple sources, synthesize it into a structured account brief.
 
+CRITICAL: The target company is identified by its DOMAIN (e.g. orthogonal.com). Multiple companies may share a similar name. Only use information that clearly relates to the company at the given domain. Discard any data about other companies with similar names — for example, news about "Orthogonal Asset Management" is irrelevant if the target domain is orthogonal.com (an API company). When in doubt, omit rather than include wrong data.
+
 Return ONLY valid JSON matching this exact schema — no markdown, no commentary:
 
 {
@@ -85,7 +87,7 @@ export async function POST(req: NextRequest) {
 
     const tasks = [
       runOrthogonal(actions[0], {
-        q: `${domain} recent news funding`,
+        q: `"${domain}" OR site:${domain} recent news funding`,
         outputType: "searchResults",
         depth: "standard",
       }),
@@ -251,7 +253,7 @@ function assembleContext({
   pdl: unknown
   scrape: unknown
 }): string {
-  const parts: string[] = [`## Target Company\nDomain: ${domain}`]
+  const parts: string[] = [`## Target Company\nDomain: ${domain}\nIMPORTANT: This brief is ONLY about the company at ${domain}. Ignore any data below that refers to a different company, even if the name is similar.`]
 
   if (icp) parts.push(`## Seller's Ideal Customer Profile\n${icp}`)
   if (product) parts.push(`## Seller's Product\n${product}`)
