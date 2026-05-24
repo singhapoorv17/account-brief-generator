@@ -124,11 +124,13 @@ export async function POST(req: NextRequest) {
 
     const [linkup, pdl, scrape] = results
 
+    const filteredLinkup = filterLinkupResults(linkup?.data ?? null, domain)
+
     const contextMessage = assembleContext({
       domain,
       icp,
       product,
-      linkup: linkup?.data ?? null,
+      linkup: filteredLinkup,
       pdl: pdl?.data ?? null,
       scrape: scrape?.data ?? null,
     })
@@ -186,6 +188,16 @@ export async function POST(req: NextRequest) {
       const person = result.value.data?.person as Record<string, unknown> | undefined
       if (!person) return contact
       apolloPrice += result.value.price
+
+      const orgDomain = String(
+        (person.organization as Record<string, unknown>)?.website_url ??
+        person.organization_domain ?? ""
+      ).replace(/^https?:\/\//, "").replace(/\/$/, "")
+
+      if (orgDomain && !orgDomain.includes(domain) && !domain.includes(orgDomain)) {
+        return contact
+      }
+
       return {
         ...contact,
         linkedInUrl: (person.linkedin_url as string) || contact.linkedInUrl,
@@ -224,6 +236,24 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+function filterLinkupResults(
+  data: Record<string, unknown> | null,
+  domain: string
+): Record<string, unknown> | null {
+  if (!data) return null
+  const results = data.results as Array<Record<string, unknown>> | undefined
+  if (!Array.isArray(results)) return data
+
+  const baseDomain = domain.replace(/^www\./, "")
+  const filtered = results.filter((r) => {
+    const url = String(r.url ?? "")
+    const name = String(r.name ?? "").toLowerCase()
+    return url.includes(baseDomain) || name.includes(baseDomain)
+  })
+
+  return { ...data, results: filtered }
 }
 
 function parseDomain(url: string | undefined): string | null {
