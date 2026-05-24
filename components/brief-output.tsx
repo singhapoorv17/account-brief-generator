@@ -288,46 +288,45 @@ function RecipePanel({
   const totalLatency = providerCalls.reduce((sum, p) => sum + p.latencyMs, 0);
 
   return (
-    <Card className="bg-secondary/30 border-border">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Terminal className="h-5 w-5 text-primary" />
+    <div className="bg-[oklch(0.08_0_0)] border border-border/50 rounded-lg overflow-hidden">
+      <div className="px-5 py-4 border-b border-border/50">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground/90">
+          <Terminal className="h-4 w-4 text-primary" />
           Inside the Orthogonal call
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Every provider this agent ran, what it returned, and what it cost in
-          credits.
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Every provider this agent ran, what it returned, and what it cost in credits.
         </p>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2 font-mono text-sm">
+      </div>
+      <div className="px-5 py-3">
+        <div className="space-y-0 font-mono text-xs">
           {providerCalls.map((call, index) => (
             <div
               key={index}
-              className="flex items-center justify-between gap-4 py-2 border-b border-border last:border-0"
+              className="flex items-center justify-between gap-4 py-2 border-b border-border/30 last:border-0"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <StatusBadge status={call.status} />
-                <span className="text-foreground">{call.provider}</span>
-                <span className="text-muted-foreground">• {call.purpose}</span>
+                <span className="text-foreground/80">{call.provider}</span>
+                <span className="text-muted-foreground/70">• {call.purpose}</span>
               </div>
-              <div className="flex items-center gap-4 text-muted-foreground">
+              <div className="flex items-center gap-3 text-muted-foreground">
                 <span>{call.latencyMs}ms</span>
-                <span className="text-primary">{call.credits} credits</span>
+                <span className="text-primary/90">{call.credits} cr</span>
               </div>
             </div>
           ))}
 
-          <div className="flex items-center justify-between pt-3 border-t border-border font-medium">
-            <span className="text-foreground">Total</span>
-            <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-border/50 font-medium">
+            <span className="text-foreground/70">Total</span>
+            <div className="flex items-center gap-3">
               <span className="text-muted-foreground">{totalLatency}ms</span>
               <span className="text-primary">{totalCredits} credits</span>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

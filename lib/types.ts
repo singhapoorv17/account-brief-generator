@@ -60,6 +60,7 @@ export type ProviderStatus = "pending" | "running" | "complete" | "error";
 export interface ProviderProgress {
   id: string;
   label: string;
+  purpose?: string;
   status: ProviderStatus;
   latencyMs?: number;
   credits?: number;
