@@ -15,4 +15,8 @@ export const PROVIDERS: Record<string, { label: string; purpose: string }> = {
     label: "GPT-4o",
     purpose: "Brief synthesis",
   },
+  "apollo.api/v1/people/match": {
+    label: "Apollo",
+    purpose: "Contact email and LinkedIn enrichment",
+  },
 }

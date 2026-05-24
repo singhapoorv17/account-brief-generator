@@ -8,7 +8,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: 'Account Brief in 90 Seconds',
-  description: 'Turn a company URL into a sales-ready account brief. One input. One agent run. Linkup, People Data Labs, ScrapeGraph, and GPT-4o coordinated through Orthogonal.',
+  description: 'Turn a company URL into a sales-ready account brief. One input. One agent run. Linkup, People Data Labs, ScrapeGraph, Apollo, and GPT-4o coordinated through Orthogonal.',
   generator: 'v0.app',
   icons: {
     icon: [

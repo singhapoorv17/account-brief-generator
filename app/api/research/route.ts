@@ -49,10 +49,12 @@ Return ONLY valid JSON matching this exact schema — no markdown, no commentary
 }
 
 Guidelines:
-- Include 2-4 funding signals, 3-5 key hires, 2-4 buying triggers, and 2-4 contacts.
+- Include 2-4 funding signals, 3-5 key hires (leadership team members), 2-4 buying triggers, and 2-4 contacts.
+- For keyHires: list the known leadership team and senior executives (CEO, CTO, VP, etc.). Use their actual start dates if known, otherwise approximate. Always include founders as key hires.
+- For contacts: these should be the same people or a subset. Leave linkedInUrl and email as empty strings — they will be enriched by Apollo separately.
 - For buying triggers, consider the seller's ICP and product when provided.
 - For the outreach angle, reference specific signals that create a timely reason to reach out.
-- If data is sparse for a section, include what you can and note gaps honestly.
+- If data is sparse for a section, include what you can based on your knowledge. Never return an empty array for keyHires — at minimum include the known founders/CEO.
 - Dates should be ISO format. Use approximate dates if exact ones aren't available.`
 
 export async function POST(req: NextRequest) {
@@ -157,6 +159,54 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       )
     }
+
+    const companyName = brief.companySnapshot.name
+
+    const apolloStart = Date.now()
+    const enriched = await Promise.allSettled(
+      brief.contacts.map((contact) => {
+        const [firstName, ...rest] = contact.name.split(" ")
+        const lastName = rest.join(" ")
+        return runOrthogonal("apollo.api/v1/people/match", {
+          first_name: firstName,
+          last_name: lastName,
+          organization_name: companyName,
+          domain,
+        })
+      })
+    )
+    const apolloLatency = Date.now() - apolloStart
+
+    let apolloPrice = 0
+    brief.contacts = brief.contacts.map((contact, i) => {
+      const result = enriched[i]
+      if (result.status !== "fulfilled") return contact
+      const person = result.value.data?.person as Record<string, unknown> | undefined
+      if (!person) return contact
+      apolloPrice += result.value.price
+      return {
+        ...contact,
+        linkedInUrl: (person.linkedin_url as string) || contact.linkedInUrl,
+        email: (person.email as string) || contact.email,
+      }
+    })
+
+    brief.keyHires = brief.keyHires.map((hire) => {
+      const matchingContact = brief.contacts.find((c) => c.name === hire.name)
+      if (matchingContact?.linkedInUrl) {
+        return { ...hire, linkedInUrl: matchingContact.linkedInUrl }
+      }
+      return hire
+    })
+
+    const apolloSuccesses = enriched.filter((r) => r.status === "fulfilled").length
+    providerCalls.push({
+      provider: PROVIDERS["apollo.api/v1/people/match"].label,
+      purpose: PROVIDERS["apollo.api/v1/people/match"].purpose,
+      status: apolloSuccesses > 0 ? "success" : "error",
+      price: apolloPrice,
+      latencyMs: apolloLatency,
+    })
 
     const response: AccountBrief = {
       ...brief,

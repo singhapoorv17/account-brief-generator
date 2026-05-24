@@ -44,8 +44,8 @@ export function BriefOutput({ brief }: BriefOutputProps) {
       {/* Funding Signals */}
       <FundingSignalsCard signals={brief.fundingSignals} />
 
-      {/* Key Hires */}
-      <KeyHiresCard hires={brief.keyHires} />
+      {/* Leadership Team */}
+      {brief.keyHires.length > 0 && <KeyHiresCard hires={brief.keyHires} />}
 
       {/* Buying Triggers */}
       <BuyingTriggersCard triggers={brief.buyingTriggers} />
