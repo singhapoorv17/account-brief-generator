@@ -128,15 +128,17 @@ function FundingSignalsCard({
               </div>
               <div className="flex-1">
                 <p className="text-foreground/90">{signal.summary}</p>
-                <a
-                  href={signal.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-1"
-                >
-                  View source
-                  <ExternalLink className="h-3 w-3" />
-                </a>
+                {signal.sourceUrl && (
+                  <a
+                    href={signal.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-1"
+                  >
+                    View source
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
               </div>
             </li>
           ))}
@@ -174,15 +176,17 @@ function KeyHiresCard({ hires }: { hires: AccountBrief["keyHires"] }) {
                 </p>
                 <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                   <span className="font-mono">{hire.startDate}</span>
-                  <a
-                    href={hire.linkedInUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline inline-flex items-center gap-1"
-                  >
-                    <Linkedin className="h-3 w-3" />
-                    LinkedIn
-                  </a>
+                  {hire.linkedInUrl && (
+                    <a
+                      href={hire.linkedInUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <Linkedin className="h-3 w-3" />
+                      LinkedIn
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -243,15 +247,17 @@ function ContactsCard({ contacts }: { contacts: AccountBrief["contacts"] }) {
                 <p className="text-sm text-muted-foreground">{contact.title}</p>
               </div>
               <div className="flex gap-2">
-                <a
-                  href={contact.linkedInUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                >
-                  <Linkedin className="h-3 w-3" />
-                  LinkedIn
-                </a>
+                {contact.linkedInUrl && (
+                  <a
+                    href={contact.linkedInUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                  >
+                    <Linkedin className="h-3 w-3" />
+                    LinkedIn
+                  </a>
+                )}
                 {contact.email && (
                   <a
                     href={`mailto:${contact.email}`}
