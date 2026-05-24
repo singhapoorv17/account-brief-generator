@@ -27,8 +27,17 @@ interface BriefOutputProps {
 }
 
 export function BriefOutput({ brief }: BriefOutputProps) {
+  const totalLatencyMs = brief.providerCalls.reduce((sum, p) => sum + p.latencyMs, 0);
+  const totalPrice = brief.providerCalls.reduce((sum, p) => sum + p.price, 0);
+  const totalSeconds = (totalLatencyMs / 1000).toFixed(1);
+
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
+      {/* Summary Banner */}
+      <div className="w-full rounded-lg border border-border bg-secondary/50 px-4 py-3 text-center text-sm text-muted-foreground">
+        Generated in {totalSeconds} seconds for ${totalPrice.toFixed(2)} across {brief.providerCalls.length} providers.
+      </div>
+
       {/* Company Snapshot */}
       <CompanySnapshotCard snapshot={brief.companySnapshot} />
 
@@ -141,7 +150,7 @@ function KeyHiresCard({ hires }: { hires: AccountBrief["keyHires"] }) {
   return (
     <Card className="bg-card border-border">
       <CardHeader>
-        <CardTitle className="text-lg">Key Hires (Last 90 Days)</CardTitle>
+        <CardTitle className="text-lg">Leadership Team</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid gap-3 sm:grid-cols-2">
