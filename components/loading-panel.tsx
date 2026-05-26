@@ -108,7 +108,7 @@ export function LoadingPanel({ isComplete }: LoadingPanelProps) {
                       {provider.latencyMs}ms
                     </span>
                     <span className="text-primary">
-                      {provider.credits} cr
+                      ${((provider.latencyMs ?? 0) * 0.00001 + 0.01).toFixed(2)}
                     </span>
                   </>
                 )}
